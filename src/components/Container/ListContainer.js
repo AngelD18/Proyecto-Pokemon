@@ -9,12 +9,12 @@ import { Footer } from '../Footer/Footer';
 
 function ListContainer() {
   const [pokemonData, setPokemonData] = useState({
-    dataPokemon: []
+    pokemonInformations: []
   });
   const [stateLanguage, setLanguage] = useState({
     value: ""
   });
-  const { dataPokemon } = pokemonData;
+  const { pokemonInformations } = pokemonData;
   const [nextUrl, setNextUrl] = useState('');
   const [prevUrl, setPrevUrl] = useState('');
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,7 @@ function ListContainer() {
       })
       setLoading(false);
     }, 500);
-  
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -45,7 +45,7 @@ function ListContainer() {
     await loadingPokemon(data.results);
     setNextUrl(data.next);
     setPrevUrl(data.previous);
-    setTimeout(() => {
+    window.setTimeout(() => {
       setLoading(false);
     }, 500);
 
@@ -58,30 +58,26 @@ function ListContainer() {
     await loadingPokemon(data.results);
     setNextUrl(data.next);
     setPrevUrl(data.previous);
-    setTimeout(() => {
+    window.setTimeout(() => {
       setLoading(false);
     }, 500);
   }
 
   const loadingPokemon = async (data) => {
-    await Promise.all(data.map(async pokemons => {
-      let pokemonRecord = await getPokemon(pokemons.url);
-      pokemons.pokemonRecord = pokemonRecord;
-      pokemons.pokemonRecord.abilities.map(async pokemonk => {
-        let pokemonAbilities = await getAllAbility(pokemonk.ability.url);
-        pokemons.pokemonRecord.pokemonAbilities = pokemonAbilities;
-        // pokemonAbilities.effect_entries.map(async pokemoni => {
-        //   let pokeLanguage = await getAllEffect(pokemoni.language.url);
-        //   pokemoni['pokeLanguage'] = pokeLanguage;
-        // })
+    await Promise.all(data.map(async pokemon => {
+      let pokemonInfo = await getPokemon(pokemon.url);
+      pokemon.pokemonInfo = pokemonInfo;
+      pokemon.pokemonInfo.abilities.map(async pokemonAbility => {
+        let pokemonAbilities = await getAllAbility(pokemonAbility.ability.url);
+        pokemon.pokemonInfo.pokemonAbilities = pokemonAbilities;
       })
 
     }));
-    dataPokemon.length = 0;
-    dataPokemon.push(data);
+    pokemonInformations.length = 0;
+    pokemonInformations.push(data);
     setPokemonData({
       ...pokemonData,
-      dataPokemon
+      pokemonInformations
     });
   }
 
@@ -101,9 +97,9 @@ function ListContainer() {
           <div className="btn">
             <button onClick={prev}>Prev</button>
             <button onClick={next}>Next</button>
-            <select className="custom-select mr-sm-5 w-25 float-right" 
-             id={stateLanguage.value}
-             onChange={handleChangeLanguage}
+            <select className="custom-select mr-sm-5 w-25 float-right"
+              id={stateLanguage.value}
+              onChange={handleChangeLanguage}
             >
               <option value={stateLanguage.value} >Idioma</option>
               <option value="en">en</option>
@@ -113,7 +109,7 @@ function ListContainer() {
 
 
           <div className="grid-container ">
-            {pokemonData.dataPokemon.map((pokemon, index) => {
+            {pokemonData.pokemonInformations.map((pokemon, index) => {
               return (
                 <Fragment key={index}>
                   {pokemon.map((poke, i) => {
