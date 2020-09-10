@@ -44,7 +44,7 @@ class Card extends Component {
           </div>
         </div>
         <p className="title-description">Description</p>
-        <div className="description">
+        <div className="description m-3">
           {pokemon.pokemonInfo.pokemonAbilities.effect_entries.map((effectEntry, index) => {
             return (
               <Fragment key={index}>
